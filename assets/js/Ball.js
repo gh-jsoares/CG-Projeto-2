@@ -1,40 +1,40 @@
 'use strict'
 
-export default class Wall {
+const GRAVITY = 2
 
-    static get HEIGHT() {
-        return 20
-    }
+export default class Ball {
 
-    static get LENGTH() {
-        return 50
-    }
-
-    static get WIDTH() {
-        return 4
-    }
-
-    constructor(x, y, z, rotate) {
+    constructor(x, y, z, radius, dy) {
         this.obj = new THREE.Object3D()
+
+        this.obj.userData = {
+            velocity: {
+                dx: 0,
+                dy: dy
+            }
+        }
+
         this.materials = {
             body: new THREE.MeshBasicMaterial({
-                color: 0x2288EF,
+                color: 0xFF4554,
                 wireframe: false
             })
         }
 
-        let geometry = new THREE.BoxGeometry(Wall.WIDTH, Wall.HEIGHT, Wall.LENGTH)
+        let geometry = new THREE.SphereGeometry(radius, 10, 10)
         let mesh = new THREE.Mesh(geometry, this.materials.body)
         this.obj.add(mesh)
-
-        if(rotate)
-            this.obj.rotation.y = Math.PI / 2
 
         this.obj.position.set(x, y, z)
     }
 
+    calculateVelocity() {
+        this.obj.userData.velocity.dy += GRAVITY
+    }
+
     animate(deltatime) {
-        
+        this.calculateVelocity()
+        this.obj.position.y -= this.obj.userData.velocity.dy * deltatime
     }
     
     addToScene(scene) {

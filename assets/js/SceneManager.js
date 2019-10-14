@@ -21,7 +21,7 @@ export default class SceneManager {
     }
 
     animate(deltaTime) {
-        
+        this.objects.forEach((obj) => obj.object.animate(deltaTime))
     }
 
     addObject(name, object) {

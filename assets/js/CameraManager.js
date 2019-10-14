@@ -1,8 +1,8 @@
 'use strict'
 
 const ASPECT = window.innerWidth / window.innerHeight
-const ORTHO_NEAR = -100
-const ORTHO_FAR = 100
+const ORTHO_NEAR = -500
+const ORTHO_FAR = 500
 const PERSC_NEAR = 0.1
 const PERSC_FAR = 1500
 const FRUSTUM_SIZE = 70
@@ -13,7 +13,7 @@ const CAMERAS = [
         x: 0, y: 100, z: 0
     },
     {
-        x: 75, y: 75, z: 75
+        x: 70, y: 70, z: 70
     },
     {
         x: 0, y: 0, z: 0

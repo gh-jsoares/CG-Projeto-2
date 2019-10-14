@@ -1,23 +1,30 @@
 'use strict'
 
 import Wall from './Wall.js'
+import Floor from './Floor.js'
 
 export default class Room {
 
     constructor(x, y, z) {
         this.obj = new THREE.Object3D()
 
-        this.walls = []
+        this.children = []
 
-        let offset = (Wall.LENGTH - Wall.WIDTH) / 2
+        let horizontal_offset = (Wall.LENGTH - Wall.WIDTH) / 2
+        let vertical_offset = Wall.HEIGHT / 2 - Floor.HEIGHT / 4
 
-        this.addWall(this.obj, 0, offset, true)
-        this.addWall(this.obj, 0, -offset, true)
-        this.addWall(this.obj, -offset, 0, false)
+        this.addFloor(this.obj, -vertical_offset)
+        this.addWall(this.obj, 0, horizontal_offset, true)
+        this.addWall(this.obj, 0, -horizontal_offset, true)
+        this.addWall(this.obj, -horizontal_offset, 0, false)
 
         this.obj.position.y = Wall.HEIGHT
 
         this.obj.position.set(x, y, z)
+    }
+
+    animate(deltatime) {
+        
     }
     
     addToScene(scene) {
@@ -30,12 +37,18 @@ export default class Room {
 
     addWall(root, x, z, rotated) {
         let wall = new Wall(x, 0, z, rotated)
-        this.walls.push(wall)
+        this.children.push(wall)
         root.add(wall.obj)
     }
 
+    addFloor(root, y) {
+        let floor = new Floor(2, y, 0)
+        this.children.push(floor)
+        root.add(floor.obj)
+    }
+
     toggleWireframe() {
-        this.walls.forEach((wall) => wall.toggleWireframe())
+        this.children.forEach((obj) => obj.toggleWireframe())
     }
 
 }

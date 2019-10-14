@@ -1,34 +1,27 @@
 'use strict'
 
-export default class Wall {
+export default class Floor {
 
     static get HEIGHT() {
-        return 20
+        return 2
     }
 
     static get LENGTH() {
         return 50
     }
 
-    static get WIDTH() {
-        return 4
-    }
-
-    constructor(x, y, z, rotate) {
+    constructor(x, y, z) {
         this.obj = new THREE.Object3D()
         this.materials = {
             body: new THREE.MeshBasicMaterial({
-                color: 0x2288EF,
+                color: 0xABCDEF,
                 wireframe: false
             })
         }
 
-        let geometry = new THREE.BoxGeometry(Wall.WIDTH, Wall.HEIGHT, Wall.LENGTH)
+        let geometry = new THREE.BoxGeometry(Floor.LENGTH - 4, Floor.WIDTH, Floor.LENGTH - 8)
         let mesh = new THREE.Mesh(geometry, this.materials.body)
         this.obj.add(mesh)
-
-        if(rotate)
-            this.obj.rotation.y = Math.PI / 2
 
         this.obj.position.set(x, y, z)
     }

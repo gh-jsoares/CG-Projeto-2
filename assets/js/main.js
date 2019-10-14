@@ -1,10 +1,12 @@
 'use strict'
 
 import Room from './Room.js'
+import BallManager from './BallManager.js'
+
 import CameraManager from './CameraManager.js'
 import SceneManager from './SceneManager.js'
 
-let cameraManager, renderer, sceneManager
+let cameraManager, renderer, sceneManager, ballManager, clock
 
 function init(shouldAnimate) {
     renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -16,17 +18,15 @@ function init(shouldAnimate) {
     cameraManager = new CameraManager(sceneManager.getScene(), renderer)
 
     sceneManager.addObject('room', new Room(0, 0, 0))
+    sceneManager.addObject('balls', new BallManager(sceneManager.scene, 5))
 
+    clock = new THREE.Clock()
     if(shouldAnimate)
         animate(0)
 }
 
-let prevTimestamp = 0
-function animate(timestamp) {
-    let deltaTime = (timestamp - prevTimestamp) / 1000 // miliseconds
-    sceneManager.animate(deltaTime)
-    prevTimestamp = timestamp
-    
+function animate() {
+    sceneManager.animate(clock.getDelta())
     render()
     requestAnimationFrame(animate)
 }
