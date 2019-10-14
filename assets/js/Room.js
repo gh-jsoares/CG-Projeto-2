@@ -1,17 +1,21 @@
 'use strict'
 
-const HEIGHT = 20
-const LENGTH = 50
+import Wall from './Wall.js'
 
 export default class Room {
 
-    constructor(x, y, z, rotate) {
+    constructor(x, y, z) {
         this.obj = new THREE.Object3D()
 
-        this.addWall(this.obj)
+        this.walls = []
 
-        if(rotate)
-            this.obj.rotation.y = Math.PI / 2
+        let offset = (Wall.LENGTH - Wall.WIDTH) / 2
+
+        this.addWall(this.obj, 0, offset, true)
+        this.addWall(this.obj, 0, -offset, true)
+        this.addWall(this.obj, -offset, 0, false)
+
+        this.obj.position.y = Wall.HEIGHT
 
         this.obj.position.set(x, y, z)
     }
@@ -24,10 +28,14 @@ export default class Room {
         scene.remove(this.obj)
     }
 
-    addWall(root) {
-        let geometry = new THREE.BoxGeometry(4, HEIGHT, LENGTH)
-        let mesh = new THREE.Mesh(geometry, this.materials.body)
-        root.add(mesh)
+    addWall(root, x, z, rotated) {
+        let wall = new Wall(x, 0, z, rotated)
+        this.walls.push(wall)
+        root.add(wall.obj)
+    }
+
+    toggleWireframe() {
+        this.walls.forEach((wall) => wall.toggleWireframe())
     }
 
 }

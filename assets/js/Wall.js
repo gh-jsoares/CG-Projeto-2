@@ -1,9 +1,19 @@
 'use strict'
 
-const HEIGHT = 20
-const LENGTH = 50
-
 export default class Wall {
+
+    static get HEIGHT() {
+        return 20
+    }
+
+    static get LENGTH() {
+        return 50
+    }
+
+    static get WIDTH() {
+        return 4
+    }
+
 
     constructor(x, y, z, rotate) {
         this.obj = new THREE.Object3D()
@@ -31,9 +41,13 @@ export default class Wall {
     }
 
     addWall(root) {
-        let geometry = new THREE.BoxGeometry(4, HEIGHT, LENGTH)
+        let geometry = new THREE.BoxGeometry(Wall.WIDTH, Wall.HEIGHT, Wall.LENGTH)
         let mesh = new THREE.Mesh(geometry, this.materials.body)
         root.add(mesh)
+    }
+
+    toggleWireframe() {
+        Object.values(this.materials).forEach((mat) => mat.wireframe = !mat.wireframe)
     }
 
 }

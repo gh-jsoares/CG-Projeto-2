@@ -1,8 +1,7 @@
 'use strict'
 
-import Robot from './Robot.js'
+import Room from './Room.js'
 import CameraManager from './CameraManager.js'
-import Wall from './Wall.js'
 import SceneManager from './SceneManager.js'
 
 let cameraManager, renderer, sceneManager
@@ -16,9 +15,7 @@ function init(shouldAnimate) {
     sceneManager = new SceneManager()
     cameraManager = new CameraManager(sceneManager.getScene(), renderer)
 
-    sceneManager.addObject('wall', new Wall(0, 0, 23, true))
-    sceneManager.addObject('wall', new Wall(0, 0, -23, true))
-    sceneManager.addObject('wall', new Wall(-23, 0, 0, false))
+    sceneManager.addObject('room', new Room(0, 0, 0))
 
     if(shouldAnimate)
         animate(0)
