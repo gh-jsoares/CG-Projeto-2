@@ -18,15 +18,18 @@ function init(shouldAnimate) {
     cameraManager = new CameraManager(sceneManager.getScene(), renderer)
 
     sceneManager.addObject('room', new Room(0, 0, 0))
-    sceneManager.addObject('balls', new BallManager(sceneManager.scene, 5))
+    sceneManager.addObject('balls', new BallManager(sceneManager.scene, 1))
 
     clock = new THREE.Clock()
     if(shouldAnimate)
         animate(0)
+    window.paused = false
 }
 
 function animate() {
-    sceneManager.animate(clock.getDelta())
+    renderer.setClearColor(0xdfe6e9)
+    if(!window.paused)
+        sceneManager.animate(clock.getDelta())
     render()
     requestAnimationFrame(animate)
 }

@@ -3,7 +3,7 @@
 export default class Wall {
 
     static get HEIGHT() {
-        return 20
+        return 10
     }
 
     static get LENGTH() {
@@ -18,7 +18,7 @@ export default class Wall {
         this.obj = new THREE.Object3D()
         this.materials = {
             body: new THREE.MeshBasicMaterial({
-                color: 0x2288EF,
+                color: 0x6c5ce7,
                 wireframe: false
             })
         }

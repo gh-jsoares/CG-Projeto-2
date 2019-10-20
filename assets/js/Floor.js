@@ -14,7 +14,7 @@ export default class Floor {
         this.obj = new THREE.Object3D()
         this.materials = {
             body: new THREE.MeshBasicMaterial({
-                color: 0xABCDEF,
+                color: 0x00cec9,
                 wireframe: false
             })
         }
