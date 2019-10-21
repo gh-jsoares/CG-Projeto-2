@@ -12,8 +12,6 @@ export default class BallManager {
         this.balls = []
         for(let i = 0; i < amount; i++)
             this.addBall()
-        
-        this.registerEvents()
     }
 
     animate(deltatime) {
@@ -44,20 +42,20 @@ export default class BallManager {
             }
         }
 
-        console.log(`Creating ball @ x= ${position.x}, y= ${position.y}, z= ${position.z} with radius= ${Ball.RADIUS}`)
-
         let ball = new Ball(position.x, position.y, position.z, position.x, 10)
 
         this.balls.push(ball)
         this.obj.add(ball.obj)
-
     }
 
-    registerEvents() {
-        window.addEventListener('keydown', (e) => {
-            if (e.keyCode == 82) // r
-                this.balls.forEach((b) => b.toggleAxesHelper())
-        })
+    fireBall(x, y, z) {
+        let ball = new Ball(x, y, z, x, 10)
+        ball.getObject3D().position.copy(position).add(direction.clone().multiplyScalar(180))
+        ball.getObject3D().rotation.copy(rotation)
+
+        ball.addToScene(this.scene)
+        this.balls.push(ball)
+        this.obj.add(ball.obj)
     }
 
     removeBall(ball) {
@@ -69,5 +67,4 @@ export default class BallManager {
     toggleWireframe() {
         this.balls.forEach((b) => b.toggleWireframe())
     }
-
 }
