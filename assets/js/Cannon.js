@@ -2,7 +2,7 @@
 
 export default class Cannon {
 
-    constructor(x, y, z) {
+    constructor(x, y, z, ballManager) {
         this.obj = new THREE.Object3D()
         this.obj.userData = {
             rotate: 0
@@ -23,6 +23,10 @@ export default class Cannon {
         this.addWheels(this.obj)
 
         this.obj.position.set(x, y, z)
+
+        this.ballManager = ballManager
+
+        this.prepareBall()
     }
 
     animate(deltaTime) {
@@ -70,6 +74,15 @@ export default class Cannon {
         root.add(mesh)
     }
 
+    prepareBall() {
+        this.ball = this.ballManager.createBall(this.obj.position.x, this.obj.position.y, this.obj.position.z, Math.PI + this.obj.rotation.y, 0)
+    }
+
+    fire(speed) {
+        this.ball.fire(speed)
+        this.prepareBall()
+    }
+
     selectCannon() {
         this.materials.body.color.setHex(0xFF0000)
     }
@@ -79,8 +92,9 @@ export default class Cannon {
     }
 
     rotateCannon(y) {
-        console.log (this.obj.userData.rotate)
         this.obj.rotation.y += y
+        if(this.ball)
+            this.ball.rotate(y)
     }
 
     toggleWireframe() {

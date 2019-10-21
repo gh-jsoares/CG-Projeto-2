@@ -7,7 +7,7 @@ import CannonManager from './CannonManager.js'
 import CameraManager from './CameraManager.js'
 import SceneManager from './SceneManager.js'
 
-let cameraManager, renderer, sceneManager, clock
+let cameraManager, renderer, sceneManager, clock, ballManager
 
 function init(shouldAnimate) {
     renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -18,9 +18,11 @@ function init(shouldAnimate) {
     sceneManager = new SceneManager()
     cameraManager = new CameraManager(sceneManager.getScene(), renderer)
 
+    ballManager = new BallManager(sceneManager.scene, 0)
+
     sceneManager.addObject('room', new Room(0, 0, 0))
-    sceneManager.addObject('balls', new BallManager(sceneManager.scene, 1))
-    sceneManager.addObject('cannons', new CannonManager(sceneManager.scene))
+    sceneManager.addObject('balls', ballManager)
+    sceneManager.addObject('cannons', new CannonManager(sceneManager.scene, ballManager))
 
     clock = new THREE.Clock()
     if(shouldAnimate)

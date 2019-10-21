@@ -11,17 +11,11 @@ export default class SceneManager {
     }
 
     registerEvents() {
-        let objectCannon = this.getObject("cannons")
-
         window.addEventListener('keydown', (e) => {
             if (e.keyCode == 52) { // 4
                 this.objects.forEach((obj) => { obj.object.toggleWireframe() })
             }
 
-            if(e.keyCode == 32) { // space
-                console.log("BOOOOM")
-                this.getObject("balls").fireBall(objectCannon.getCannonDirection(), objectCannon.getPosition(), objectCannon.getRotation())
-            }
         })
     }
 

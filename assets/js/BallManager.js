@@ -14,6 +14,7 @@ export default class BallManager {
             this.addBall()
 
         this.registerEvents()
+        this.showAxis = false
     }
 
     animate(deltatime) {
@@ -32,6 +33,17 @@ export default class BallManager {
         return position
     }
 
+    createBall(x, y, z, angle, speed) {
+        let ball = new Ball(x, y, z, angle, speed, this.showAxis)
+
+        this.balls.push(ball)
+        this.obj.add(ball.obj)
+
+        ball.addToScene(this.scene)
+        
+        return ball
+    }
+
     addBall() {
         let position = this.generateCoordinates()
         for(let i = 0; i < this.balls.length; i++) {
@@ -44,20 +56,7 @@ export default class BallManager {
             }
         }
 
-        let ball = new Ball(position.x, position.y, position.z, position.x, 10)
-
-        this.balls.push(ball)
-        this.obj.add(ball.obj)
-    }
-
-    fireBall(x, y, z) {
-        let ball = new Ball(x, y, z, x, 10)
-        ball.getObject3D().position.copy(position).add(direction.clone().multiplyScalar(180))
-        ball.getObject3D().rotation.copy(rotation)
-
-        ball.addToScene(this.scene)
-        this.balls.push(ball)
-        this.obj.add(ball.obj)
+        this.createBall(position.x, position.y, position.z, position.x, 10)
     }
 
     removeBall(ball) {
@@ -68,8 +67,10 @@ export default class BallManager {
 
     registerEvents() {
         window.addEventListener('keydown', (e) => {
-            if (e.keyCode == 82) // r
+            if (e.keyCode == 82) { // r
                 this.balls.forEach((b) => b.toggleAxesHelper())
+                this.showAxis = !this.showAxis
+            }
         })
     }
 

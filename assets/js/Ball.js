@@ -1,24 +1,27 @@
 'use strict'
 
 const GRAVITY = 0
+const FRICTION = 0.99
 
 import { computePosition } from './Utils.js'
 
 export default class Ball {
 
     static get RADIUS() {
-        return 3
+        return 2
     }
 
-    constructor(x, y, z, rotation, velocity) {
+    constructor(x, y, z, rotation, velocity, showAxis = false) {
         this.obj = new THREE.Object3D()
 
         this.axesHelper = new THREE.AxesHelper(15)
-        this.toggleAxesHelper() // hide
+        if(!showAxis)
+            this.toggleAxesHelper() // hide
         this.obj.add(this.axesHelper)
 
         this.obj.userData = {
-            velocity: velocity
+            velocity: velocity,
+            collided: false
         }
 
         this.materials = {
@@ -37,6 +40,14 @@ export default class Ball {
         this.previousPos = new THREE.Vector3(x, y, z)
     }
 
+    rotate(y) {
+        this.obj.rotateY(y)
+    }
+
+    fire(speed) {
+        this.obj.userData.velocity = speed
+    }
+
     calculateVelocity(deltatime) {
         //this.obj.userData.velocity.dy += GRAVITY
 
@@ -46,23 +57,42 @@ export default class Ball {
         let angle = this.obj.rotation.y
 
         let velx = Math.sin(angle) * this.obj.userData.velocity
-        let velz = Math.cos(angle) * this.obj.userData.velocity        
+        let velz = Math.cos(angle) * this.obj.userData.velocity
 
-        this.obj.userData.velocity = Math.sqrt(velx * velx + velz * velz)
+        let tpos = computePosition(this.obj.position, deltatime, new THREE.Vector2(velx, velz))
+        let pos = this.obj.position
 
-        let tentative_pos = computePosition(this.obj.position, deltatime, new THREE.Vector2(velx, velz))
-
-        console.log(`P: ${this.previousPos.x}, ${this.previousPos.z}`)
-        console.log(`T: ${tentative_pos.x}, ${tentative_pos.z}`)
-        if(tentative_pos.x < -21 + Ball.RADIUS || tentative_pos.z < -21 + Ball.RADIUS || tentative_pos.z > 21 - Ball.RADIUS) {
-            console.log('COLLI')
+        if((tpos.x < -21 + Ball.RADIUS || pos.x < -21 + Ball.RADIUS) && !this.obj.userData.collided) {
             let vect = new THREE.Vector3(velx, 0, velz)
             vect.cross(THREE.Object3D.DefaultUp)
-            angle = -Math.atan2(vect.z - velz, vect.x - velx)
-            this.obj.rotateY(angle)
-        }
-        this.previousPos.set(this.obj.position.x, this.obj.position.y, this.obj.position.z)
-        //console.log(this.obj.rotation.y)
+            angle = Math.atan2(vect.z, vect.x - 1)
+            this.obj.userData.collided = true
+            this.obj.rotation.y = angle
+        } else if(pos.x > -21 + Ball.RADIUS && this.obj.userData.collided)
+            this.obj.userData.collided = false
+
+            
+        if((tpos.x < -21 + Ball.RADIUS || pos.x < -21 + Ball.RADIUS) && !this.obj.userData.collided) {
+            let vect = new THREE.Vector3(velx, 0, velz)
+            vect.cross(THREE.Object3D.DefaultUp)
+            angle = Math.atan2(vect.z - 1, vect.x)
+            this.obj.userData.collided = true
+            this.obj.rotation.y = Math.PI - angle
+        } else if(pos.z > -21 + Ball.RADIUS && this.obj.userData.collided)
+            this.obj.userData.collided = false
+
+
+        // console.log(`P: ${this.previousPos.x}, ${this.previousPos.z}`)
+        // console.log(`T: ${tentative_pos.x}, ${tentative_pos.z}`)
+        // if(tentative_pos.x < -21 + Ball.RADIUS || tentative_pos.z < -21 + Ball.RADIUS || tentative_pos.z > 21 - Ball.RADIUS) {
+        //     console.log('COLLI')
+        //     let vect = new THREE.Vector3(velx, 0, velz)
+        //     vect.cross(THREE.Object3D.DefaultUp)
+        //     angle = -Math.atan2(vect.z - velz, vect.x - velx)
+        //     this.obj.rotateY(angle)
+        // }
+        // this.previousPos.set(this.obj.position.x, this.obj.position.y, this.obj.position.z)
+        // //console.log(this.obj.rotation.y)
     }
 
     calculatePosition(deltatime) {
@@ -83,6 +113,7 @@ export default class Ball {
 
         this.ball.rotateZ(this.obj.userData.velocity * deltatime)
         this.obj.translateX(this.obj.userData.velocity * deltatime)
+        this.obj.userData.velocity = this.obj.userData.velocity * FRICTION
     }
     
     addToScene(scene) {

@@ -1,11 +1,11 @@
 'use strict'
-const CANNON_ROTATE_SPEED = 0.3
+const CANNON_ROTATE_SPEED = 1
 
 import Cannon from './Cannon.js'
 
 export default class CannonManager {
 
-	constructor(scene) {
+	constructor(scene, ballManager) {
 		this.scene = scene
 		this.obj = new THREE.Object3D()
 
@@ -16,9 +16,9 @@ export default class CannonManager {
 		this.pressLeft = false
 		this.pressRight = false
 
-		this.addCannon(40, 0, -16.5)
-		this.addCannon(40, 0, 0)
-		this.addCannon(40, 0, 16.5)
+		this.addCannon(40, 0, -16.5, ballManager)
+		this.addCannon(40, 0, 0, ballManager)
+		this.addCannon(40, 0, 16.5, ballManager)
 
 		this.registerEvents()
 	}
@@ -56,6 +56,10 @@ export default class CannonManager {
 				this.pressRight = true
 
 			}
+			
+			if(e.keyCode == 32) { // space
+				this.cannons[this.selectedCannon].fire(50)
+            }
         })
 
 		window.addEventListener('keyup', (e) => {
@@ -129,8 +133,8 @@ export default class CannonManager {
 		return this.cannons[this.selectCannon].rotation
 	}
 
-	addCannon(x, y, z) {
-		let cannon = new Cannon(x, y, z)
+	addCannon(x, y, z, ballManager) {
+		let cannon = new Cannon(x, y, z, ballManager)
 
 		this.cannons.push(cannon)
 		this.obj.add(cannon.obj)
