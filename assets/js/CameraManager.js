@@ -62,11 +62,11 @@ export default class CameraManager {
             case 3:
                 this.activeCamera = this.perspectiveCamera
                 break
-        
+
             default:
                 break
         }
-        
+
         this.activeCamera.position.x = CAMERAS[view-1].x
         this.activeCamera.position.y = CAMERAS[view-1].y
         this.activeCamera.position.z = CAMERAS[view-1].z
@@ -81,13 +81,13 @@ export default class CameraManager {
 
     resize(renderer) {
         let aspect = window.innerWidth / window.innerHeight
-    
+
         if(this.isOrthoCamera()) {
             this.activeCamera.left = FRUSTUM_SIZE * aspect / -2
             this.activeCamera.right = FRUSTUM_SIZE * aspect / 2
             this.activeCamera.top = FRUSTUM_SIZE / 2
             this.activeCamera.bottom = -FRUSTUM_SIZE / 2
-        } else 
+        } else
             this.activeCamera.aspect = aspect
 
         this.activeCamera.updateProjectionMatrix()
