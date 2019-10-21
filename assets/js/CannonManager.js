@@ -99,12 +99,14 @@ export default class CannonManager {
     }
 
 	selectCannon(n) {
-		this.selectedCannon = n
-		this.turningLeft = false
-		this.turningRight = false
-		this.pressLeft = false
-		this.pressRight = false
 		this.cannons[n].obj.userData.rotate = 0
+		this.selectedCannon = n
+		if (this.turningLeft)
+			this.cannons[n].obj.userData.rotate = CANNON_ROTATE_SPEED
+		else if (this.turningRight)
+			this.cannons[n].obj.userData.rotate = -CANNON_ROTATE_SPEED
+		else
+			this.cannons[n].obj.userData.rotate = 0
 	}
 
 	animate(deltaTime) {
