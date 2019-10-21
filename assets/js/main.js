@@ -16,9 +16,9 @@ function init(shouldAnimate) {
     document.body.appendChild(renderer.domElement)
 
     sceneManager = new SceneManager()
-    cameraManager = new CameraManager(sceneManager.getScene(), renderer)
-
-    ballManager = new BallManager(sceneManager.scene, 0)
+    
+    ballManager = new BallManager(sceneManager.scene, 5)
+    cameraManager = new CameraManager(sceneManager.getScene(), renderer, ballManager)
 
     sceneManager.addObject('room', new Room(0, 0, 0))
     sceneManager.addObject('balls', ballManager)
@@ -33,8 +33,13 @@ function init(shouldAnimate) {
 
 function animate() {
     renderer.setClearColor(0xdfe6e9)
-    if(!window.paused)
-        sceneManager.animate(clock.getDelta())
+
+    if(!window.paused) {
+        let deltatime = clock.getDelta()
+        cameraManager.animate(deltatime)
+        sceneManager.animate(deltatime)
+    }
+
     render()
     requestAnimationFrame(animate)
 }

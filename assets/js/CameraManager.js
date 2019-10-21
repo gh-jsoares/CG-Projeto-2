@@ -21,13 +21,22 @@ const CAMERAS = [
 ]
 
 export default class CameraManager {
-    constructor(scene, renderer) {
+    constructor(scene, renderer, ballManager) {
         this.orthographicCamera = new THREE.OrthographicCamera(-FRUSTUM_SIZE * ASPECT / 2, FRUSTUM_SIZE * ASPECT / 2, FRUSTUM_SIZE / 2, -FRUSTUM_SIZE / 2, ORTHO_NEAR, ORTHO_FAR)
         this.perspectiveCamera = new THREE.PerspectiveCamera(FOV, ASPECT, PERSC_NEAR, PERSC_FAR)
+        this.ballCamera = new THREE.PerspectiveCamera(FOV, ASPECT, PERSC_NEAR, PERSC_FAR)
+        this.ballCamera.name = 'camera'
 
         this.switchView(1,renderer)
 
         this.registerEvents(renderer)
+
+        this.ballManager = ballManager
+    }
+
+    animate(deltatime) {
+        if(this.activeCamera == this.ballCamera)
+            this.updatePerspectiveCamera(deltatime)
     }
 
     getOrthographicCamera() {
@@ -59,19 +68,24 @@ export default class CameraManager {
                 this.activeCamera = this.orthographicCamera
                 break
             case 2:
-            case 3:
                 this.activeCamera = this.perspectiveCamera
+                break
+            case 3:
+                this.activeCamera = this.ballCamera
                 break
 
             default:
                 break
         }
 
-        this.activeCamera.position.x = CAMERAS[view-1].x
-        this.activeCamera.position.y = CAMERAS[view-1].y
-        this.activeCamera.position.z = CAMERAS[view-1].z
+        if(view != 3) {
+            this.activeCamera.position.x = CAMERAS[view-1].x
+            this.activeCamera.position.y = CAMERAS[view-1].y
+            this.activeCamera.position.z = CAMERAS[view-1].z
 
-        this.activeCamera.lookAt(0, 0, 0)
+            this.activeCamera.lookAt(0, 0, 0)
+        }
+
         this.resize(renderer)
     }
 
@@ -92,5 +106,15 @@ export default class CameraManager {
 
         this.activeCamera.updateProjectionMatrix()
         renderer.setSize(window.innerWidth, window.innerHeight)
+    }
+
+    updatePerspectiveCamera(deltatime) {
+        let ball = this.ballManager.activeBall
+        ball.obj.add(this.activeCamera)
+        this.activeCamera.position.x = 15 * Math.sign(ball.obj.userData.velocityX)
+        this.activeCamera.position.y = 13
+        this.activeCamera.position.z = 0
+
+        this.activeCamera.lookAt(ball.obj.position)
     }
 }

@@ -1,7 +1,7 @@
 'use strict'
 
 const GRAVITY = 0
-const FRICTION = 0.99
+const FRICTION = 1
 
 import { computePosition } from './Utils.js'
 
@@ -20,7 +20,8 @@ export default class Ball {
         this.obj.add(this.axesHelper)
 
         this.obj.userData = {
-            velocity: velocity,
+            velocityX: velocity,
+            velocityZ: velocity,
             collided: false
         }
 
@@ -44,43 +45,37 @@ export default class Ball {
         this.obj.rotateY(y)
     }
 
-    fire(speed) {
-        this.obj.userData.velocity = speed
+    fire(speed, angle) {
+        //console.log(angle)
+        //console.log(Math.cos(angle) * speed)
+        //console.log(Math.sin(angle) * speed)
+        this.obj.userData.velocityX = -Math.cos(angle) * speed
+        this.obj.userData.velocityZ = Math.sin(angle) * speed
     }
 
     calculateVelocity(deltatime) {
         //this.obj.userData.velocity.dy += GRAVITY
-
+        
     }
 
     checkBoundingBox(deltatime) { // needs fix - THIS IS THE THING I WAS TALKING ABOUT!!!!!!
-        let angle = this.obj.rotation.y
 
-        let velx = Math.sin(angle) * this.obj.userData.velocity
-        let velz = Math.cos(angle) * this.obj.userData.velocity
-
-        let tpos = computePosition(this.obj.position, deltatime, new THREE.Vector2(velx, velz))
+        let tpos = computePosition(this.obj.position, deltatime, new THREE.Vector2(this.obj.userData.velocityX, this.obj.userData.velocityZ))
         let pos = this.obj.position
-
-        if((tpos.x < -21 + Ball.RADIUS || pos.x < -21 + Ball.RADIUS) && !this.obj.userData.collided) {
-            let vect = new THREE.Vector3(velx, 0, velz)
-            vect.cross(THREE.Object3D.DefaultUp)
-            angle = Math.atan2(vect.z, vect.x - 1)
+        
+        if(tpos.x < -21 + Ball.RADIUS && !this.obj.userData.collided) {
+            this.obj.userData.velocityX = this.obj.userData.velocityX * -1
             this.obj.userData.collided = true
-            this.obj.rotation.y = angle
         } else if(pos.x > -21 + Ball.RADIUS && this.obj.userData.collided)
             this.obj.userData.collided = false
 
-            
-        if((tpos.x < -21 + Ball.RADIUS || pos.x < -21 + Ball.RADIUS) && !this.obj.userData.collided) {
-            let vect = new THREE.Vector3(velx, 0, velz)
-            vect.cross(THREE.Object3D.DefaultUp)
-            angle = Math.atan2(vect.z - 1, vect.x)
-            this.obj.userData.collided = true
-            this.obj.rotation.y = Math.PI - angle
-        } else if(pos.z > -21 + Ball.RADIUS && this.obj.userData.collided)
-            this.obj.userData.collided = false
 
+        if((tpos.z < -21 + Ball.RADIUS || tpos.z > 21) && !this.obj.userData.collided) {
+            this.obj.userData.velocityZ = this.obj.userData.velocityZ * -1
+            this.obj.userData.collided = true
+        } else if((pos.z > -21 + Ball.RADIUS || tpos.z > 21) && this.obj.userData.collided)
+            this.obj.userData.collided = false
+        
 
         // console.log(`P: ${this.previousPos.x}, ${this.previousPos.z}`)
         // console.log(`T: ${tentative_pos.x}, ${tentative_pos.z}`)
@@ -111,9 +106,11 @@ export default class Ball {
         // this.calculatePosition(deltatime)
         // this.calculateRotation(deltatime)
 
-        this.ball.rotateZ(this.obj.userData.velocity * deltatime)
-        this.obj.translateX(this.obj.userData.velocity * deltatime)
-        this.obj.userData.velocity = this.obj.userData.velocity * FRICTION
+        //this.ball.rotateZ(this.obj.userData.velocity * deltatime)
+        this.obj.position.x += (this.obj.userData.velocityX)* deltatime
+        this.obj.position.z += (this.obj.userData.velocityZ)* deltatime
+        this.obj.userData.velocityX = this.obj.userData.velocityX * FRICTION
+        this.obj.userData.velocityZ = this.obj.userData.velocityZ * FRICTION
     }
     
     addToScene(scene) {

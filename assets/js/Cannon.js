@@ -79,7 +79,9 @@ export default class Cannon {
     }
 
     fire(speed) {
-        this.ball.fire(speed)
+        let angle = this.obj.rotation.y
+        this.ball.fire(speed, angle)
+        this.ballManager.setActiveBall(this.ball)
         this.prepareBall()
     }
 

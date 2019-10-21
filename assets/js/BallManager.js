@@ -15,10 +15,30 @@ export default class BallManager {
 
         this.registerEvents()
         this.showAxis = false
+        this.setActiveBall(this.getLastBall())
+    }
+
+    getLastBall() {
+        return this.balls[this.balls.length - 1]
+    }
+
+    setActiveBall(ball) {
+        if(this.activeBall)
+            this.activeBall.obj.remove(this.scene.getObjectByName('camera'))
+        this.activeBall = ball
     }
 
     animate(deltatime) {
-        this.balls.forEach((ball) => ball.animate(deltatime))
+        for(let i = 0; i < this.balls.length; i++) {
+            const b1 = this.balls[i]
+            // for (let j = i + 1; j < this.balls.length; j++) {
+            //     const b2 = this.balls[j]
+            //     if(b1.obj.position.x < 21 && getDistance(b1.obj.position.x, b1.obj.position.y, b1.obj.position.z, b2.obj.position.x, b2.obj.position.y, b2.obj.position.z) - Ball.RADIUS * 2 < 0 ) {
+            //         b1.resolveCollision(b2)
+            //     }
+            // }
+            b1.animate(deltatime)
+        }
     }
 
     addToScene(scene) {
@@ -56,7 +76,7 @@ export default class BallManager {
             }
         }
 
-        this.createBall(position.x, position.y, position.z, position.x, 10)
+        this.createBall(position.x, position.y, position.z, position.x, 0)
     }
 
     removeBall(ball) {
