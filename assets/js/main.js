@@ -19,7 +19,7 @@ function init(shouldAnimate) {
     cameraManager = new CameraManager(sceneManager.getScene(), renderer)
 
     sceneManager.addObject('room', new Room(0, 0, 0))
-    sceneManager.addObject('balls', new BallManager(sceneManager.scene, 5))
+    sceneManager.addObject('balls', new BallManager(sceneManager.scene, 1))
     sceneManager.addObject('cannons', new CannonManager(sceneManager.scene))
 
     clock = new THREE.Clock()

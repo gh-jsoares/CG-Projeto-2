@@ -12,6 +12,8 @@ export default class BallManager {
         this.balls = []
         for(let i = 0; i < amount; i++)
             this.addBall()
+
+        this.registerEvents()
     }
 
     animate(deltatime) {
@@ -62,6 +64,13 @@ export default class BallManager {
         let index = this.balls.findIndex((b) => b == ball)
         ball.removeFromScene(this.scene)
         this.balls.splice(index, 1)
+    }
+
+    registerEvents() {
+        window.addEventListener('keydown', (e) => {
+            if (e.keyCode == 82) // r
+                this.balls.forEach((b) => b.toggleAxesHelper())
+        })
     }
 
     toggleWireframe() {

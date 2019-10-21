@@ -10,7 +10,5 @@ export function getDistance(x1, y1, z1, x2, y2, z2) {
 
 
 export function computePosition(pos, deltatime, speed) {
-    return pos + speed * deltatime
+    return new THREE.Vector3(pos.x + speed.x * deltatime, pos.y, pos.z + speed.y * deltatime) 
 }
-
-export function checkLimits()

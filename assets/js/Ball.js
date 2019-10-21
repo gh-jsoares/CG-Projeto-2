@@ -2,6 +2,8 @@
 
 const GRAVITY = 0
 
+import { computePosition } from './Utils.js'
+
 export default class Ball {
 
     static get RADIUS() {
@@ -32,6 +34,7 @@ export default class Ball {
 
         this.obj.rotation.set(0, rotation, 0)
         this.obj.position.set(x, y, z)
+        this.previousPos = new THREE.Vector3(x, y, z)
     }
 
     calculateVelocity(deltatime) {
@@ -39,23 +42,26 @@ export default class Ball {
 
     }
 
-    checkBoundingBox(deltatime) { // needs fix
+    checkBoundingBox(deltatime) { // needs fix - THIS IS THE THING I WAS TALKING ABOUT!!!!!!
         let angle = this.obj.rotation.y
 
         let velx = Math.sin(angle) * this.obj.userData.velocity
-        let velz = Math.cos(angle) * this.obj.userData.velocity
-
-        
+        let velz = Math.cos(angle) * this.obj.userData.velocity        
 
         this.obj.userData.velocity = Math.sqrt(velx * velx + velz * velz)
 
-        if(this.obj.position.x < -21 + Ball.RADIUS || this.obj.position.z < -21 + Ball.RADIUS || this.obj.position.z > 21 - Ball.RADIUS) {
+        let tentative_pos = computePosition(this.obj.position, deltatime, new THREE.Vector2(velx, velz))
+
+        console.log(`P: ${this.previousPos.x}, ${this.previousPos.z}`)
+        console.log(`T: ${tentative_pos.x}, ${tentative_pos.z}`)
+        if(tentative_pos.x < -21 + Ball.RADIUS || tentative_pos.z < -21 + Ball.RADIUS || tentative_pos.z > 21 - Ball.RADIUS) {
+            console.log('COLLI')
             let vect = new THREE.Vector3(velx, 0, velz)
             vect.cross(THREE.Object3D.DefaultUp)
             angle = -Math.atan2(vect.z - velz, vect.x - velx)
             this.obj.rotateY(angle)
         }
-
+        this.previousPos.set(this.obj.position.x, this.obj.position.y, this.obj.position.z)
         //console.log(this.obj.rotation.y)
     }
 
