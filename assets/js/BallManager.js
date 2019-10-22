@@ -32,7 +32,7 @@ export default class BallManager {
     }
 
     animate(deltatime) {
-        for(let i = this.balls.length - 1; i > 0; i--) {
+        for(let i = this.balls.length - 1; i >= 0; i--) {
             const b1 = this.balls[i]
             for (let j = i - 1; j >= 0; j--) {
                 const b2 = this.balls[j]

@@ -15,6 +15,7 @@ export default class CannonManager {
 		this.turningRight = false
 		this.pressLeft = false
 		this.pressRight = false
+		this.firing = false
 
 		this.addCannon(40, 0, -16.5, ballManager)
 		this.addCannon(40, 0, 0, ballManager)
@@ -57,8 +58,9 @@ export default class CannonManager {
 
 			}
 			
-			if(e.keyCode == 32) { // space
+			if(e.keyCode == 32 && !this.firing) { // space
 				this.cannons[this.selectedCannon].fire(40)
+				this.firing = true
             }
         })
 
@@ -95,6 +97,9 @@ export default class CannonManager {
 				}
 				this.pressRight = false
 			}
+			if(e.keyCode == 32) { // space
+				this.firing = false
+            }
         })
     }
 

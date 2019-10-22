@@ -5,7 +5,6 @@ export default class SceneManager {
         this.objects = []
 
         this.scene = new THREE.Scene()
-        this.scene.add(new THREE.AxesHelper(30))
 
         this.registerEvents()
     }
