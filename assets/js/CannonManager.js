@@ -1,9 +1,7 @@
 'use strict'
-const CANNON_ROTATE_SPEED = 1
+const CANNON_ROTATE_SPEED = 1.5
 
-import Cannon from './Cannon.js'
-
-export default class CannonManager {
+class CannonManager {
 
 	constructor(scene, ballManager) {
 		this.scene = scene
@@ -17,9 +15,9 @@ export default class CannonManager {
 		this.pressRight = false
 		this.firing = false
 
-		this.addCannon(30, 0, -16.5, ballManager)
-		this.addCannon(30, 0, 0, ballManager)
-		this.addCannon(30, 0, 16.5, ballManager)
+		this.addCannon(27, 0, -16.5, ballManager)
+		this.addCannon(27, 0, 0, ballManager)
+		this.addCannon(27, 0, 16.5, ballManager)
 
 		this.registerEvents()
 	}

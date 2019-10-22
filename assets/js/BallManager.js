@@ -1,11 +1,6 @@
 'use strict'
 
-import Ball from './Ball.js'
-import Wall from './Wall.js'
-import Floor from './Floor.js'
-import { computePosition, genRandomIntInRange, getDistance } from './Utils.js'
-
-export default class BallManager {
+class BallManager {
 
     constructor(scene, amount) {
         this.scene = scene
@@ -38,8 +33,8 @@ export default class BallManager {
                 const b2 = this.balls[j]
                 let tpos1 = computePosition(b1.obj.position, deltatime, new THREE.Vector2(b1.obj.userData.velocityX, b1.obj.userData.velocityZ))
                 let tpos2 = computePosition(b2.obj.position, deltatime, new THREE.Vector2(b2.obj.userData.velocityX, b2.obj.userData.velocityZ))
-                if(tpos1.x - Ball.RADIUS <= 26 && getDistance(tpos1.x, tpos1.y, tpos1.z, tpos2.x, tpos2.y, tpos2.z) - Math.pow(2 * Ball.RADIUS, 2) <= 0 ) {
-                    b1.resolveCollision(b2)
+                if(tpos1.x - Ball.RADIUS <= 24 && getDistance(tpos1.x, tpos1.y, tpos1.z, tpos2.x, tpos2.y, tpos2.z) - Math.pow(2 * Ball.RADIUS, 2) <= 0 ) {
+                    b1.handleCollision(b2)
                 }
             }
             b1.animate(deltatime)
@@ -55,9 +50,9 @@ export default class BallManager {
 
     generateCoordinates() {
         let position = new THREE.Vector3()
-        position.x = genRandomIntInRange(-15, 15)
+        position.x = genRandomIntInRange(-19, 17)
         position.y = Floor.HEIGHT / 2 - Wall.HEIGHT / 2 + Ball.RADIUS
-        position.z = genRandomIntInRange(-15, 15)
+        position.z = genRandomIntInRange(-19, 19)
         return position
     }
 

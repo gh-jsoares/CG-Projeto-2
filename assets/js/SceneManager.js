@@ -1,6 +1,6 @@
 'use strict'
 
-export default class SceneManager {
+class SceneManager {
     constructor() {
         this.objects = []
 

@@ -1,6 +1,6 @@
 'use strict'
 
-export default class Wall {
+class Wall {
 
     static get HEIGHT() {
         return 10

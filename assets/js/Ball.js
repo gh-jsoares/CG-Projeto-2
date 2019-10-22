@@ -1,11 +1,9 @@
 'use strict'
 
 const GRAVITY = 1
-const FRICTION = 0.99
+const FRICTION = 0.995
 
-import { computePosition, rotateByAngle, swapVectorX } from './Utils.js'
-
-export default class Ball {
+class Ball {
 
     static get RADIUS() {
         return 1.8
@@ -68,7 +66,7 @@ export default class Ball {
     checkBoundingBox(deltatime) {
         let tpos = computePosition(this.obj.position, deltatime, new THREE.Vector2(this.obj.userData.velocityX, this.obj.userData.velocityZ))
         
-        if(tpos.x - Ball.RADIUS >= 22 && this.obj.userData.fired && !this.obj.userData.falling) {
+        if(tpos.x - Ball.RADIUS >= 25 && this.obj.userData.fired && !this.obj.userData.falling) {
             this.obj.userData.velocityY = -100
             this.obj.userData.falling = true
         } else if(tpos.x - Ball.RADIUS <= 22) {
@@ -83,7 +81,7 @@ export default class Ball {
         
     }
 
-    resolveCollision(otherBall) {
+    handleCollision(otherBall) {
         this.obj.userData.fired = true
         otherBall.obj.userData.fired = true
         let xVelocityDiff = this.obj.userData.velocityX - otherBall.obj.userData.velocityX

@@ -1,12 +1,5 @@
 'use strict'
 
-import Room from './Room.js'
-import BallManager from './BallManager.js'
-import CannonManager from './CannonManager.js'
-
-import CameraManager from './CameraManager.js'
-import SceneManager from './SceneManager.js'
-
 let cameraManager, renderer, sceneManager, clock, ballManager
 
 function init(shouldAnimate) {
@@ -17,7 +10,7 @@ function init(shouldAnimate) {
 
     sceneManager = new SceneManager()
     
-    ballManager = new BallManager(sceneManager.scene, 10)
+    ballManager = new BallManager(sceneManager.scene, 40)
     cameraManager = new CameraManager(sceneManager.getScene(), renderer, ballManager)
 
     sceneManager.addObject('room', new Room(0, 0, 0))

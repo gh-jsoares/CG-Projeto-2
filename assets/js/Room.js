@@ -1,9 +1,6 @@
 'use strict'
 
-import Wall from './Wall.js'
-import Floor from './Floor.js'
-
-export default class Room {
+class Room {
 
     constructor(x, y, z) {
         this.obj = new THREE.Object3D()
