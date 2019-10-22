@@ -68,52 +68,47 @@ export default class Ball {
     checkBoundingBox(deltatime) {
         let tpos = computePosition(this.obj.position, deltatime, new THREE.Vector2(this.obj.userData.velocityX, this.obj.userData.velocityZ))
         
-        if(tpos.x - Ball.RADIUS < -21)
-            this.obj.userData.velocityX = this.obj.userData.velocityX * -1
-
-        if((tpos.z - Ball.RADIUS < -21  || tpos.z + Ball.RADIUS > 21))
-            this.obj.userData.velocityZ = this.obj.userData.velocityZ * -1
-        
         if(tpos.x - Ball.RADIUS >= 22 && this.obj.userData.fired && !this.obj.userData.falling) {
             this.obj.userData.velocityY = -100
             this.obj.userData.falling = true
-        } else if(tpos.x - Ball.RADIUS <= 22)
+        } else if(tpos.x - Ball.RADIUS <= 22) {
             this.obj.userData.fired = true
+
+            if(tpos.x - Ball.RADIUS < -21)
+                this.obj.userData.velocityX = this.obj.userData.velocityX * -1
+    
+            if((tpos.z - Ball.RADIUS < -21  || tpos.z + Ball.RADIUS > 21))
+                this.obj.userData.velocityZ = this.obj.userData.velocityZ * -1
+        }
         
     }
 
     resolveCollision(otherBall) {
         this.obj.userData.fired = true
         otherBall.obj.userData.fired = true
-        const xVelocityDiff = this.obj.userData.velocityX - otherBall.obj.userData.velocityX
-        const zVelocityDiff = this.obj.userData.velocityZ - otherBall.obj.userData.velocityZ
+        let xVelocityDiff = this.obj.userData.velocityX - otherBall.obj.userData.velocityX
+        let zVelocityDiff = this.obj.userData.velocityZ - otherBall.obj.userData.velocityZ
 
-        const xDist = otherBall.obj.position.x - this.obj.position.x
-        const zDist = otherBall.obj.position.z - this.obj.position.z
+        let xDist = otherBall.obj.position.x - this.obj.position.x
+        let zDist = otherBall.obj.position.z - this.obj.position.z
 
-        // Prevent accidental overlap of particles
         if (xVelocityDiff * xDist + zVelocityDiff * zDist >= 0) {
 
-            // Grab angle between the two colliding particles
-            const angle = -Math.atan2(zDist, xDist)
+            let angle = -Math.atan2(zDist, xDist)
 
-            // Velocity before equation
-            const u1 = rotateByAngle(new THREE.Vector2(this.obj.userData.velocityX, this.obj.userData.velocityZ), angle)
-            const u2 = rotateByAngle(new THREE.Vector2(otherBall.obj.userData.velocityX, otherBall.obj.userData.velocityZ), angle)
+            let u1 = rotateByAngle(new THREE.Vector2(this.obj.userData.velocityX, this.obj.userData.velocityZ), angle)
+            let u2 = rotateByAngle(new THREE.Vector2(otherBall.obj.userData.velocityX, otherBall.obj.userData.velocityZ), angle)
 
-            // Velocity after 1d collision equation
             swapVectorX(u1, u2)
 
-            // Final velocity after rotating axis back to original location
-            const vFinal1 = rotateByAngle(u1, -angle)
-            const vFinal2 = rotateByAngle(u2, -angle)
+            u1 = rotateByAngle(u1, -angle)
+            u2 = rotateByAngle(u2, -angle)
 
-            // Swap this.obj velocities for realistic bounce effect
-            this.obj.userData.velocityX = vFinal1.x
-            this.obj.userData.velocityZ = vFinal1.y
+            this.obj.userData.velocityX = u1.x
+            this.obj.userData.velocityZ = u1.y
 
-            otherBall.obj.userData.velocityX = vFinal2.x
-            otherBall.obj.userData.velocityZ = vFinal2.y
+            otherBall.obj.userData.velocityX = u2.x
+            otherBall.obj.userData.velocityZ = u2.y
         }
     }
 

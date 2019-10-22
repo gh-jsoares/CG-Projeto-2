@@ -17,9 +17,9 @@ export default class CannonManager {
 		this.pressRight = false
 		this.firing = false
 
-		this.addCannon(40, 0, -16.5, ballManager)
-		this.addCannon(40, 0, 0, ballManager)
-		this.addCannon(40, 0, 16.5, ballManager)
+		this.addCannon(30, 0, -16.5, ballManager)
+		this.addCannon(30, 0, 0, ballManager)
+		this.addCannon(30, 0, 16.5, ballManager)
 
 		this.registerEvents()
 	}
