@@ -17,7 +17,7 @@ function init(shouldAnimate) {
 
     sceneManager = new SceneManager()
     
-    ballManager = new BallManager(sceneManager.scene, 5)
+    ballManager = new BallManager(sceneManager.scene, 10)
     cameraManager = new CameraManager(sceneManager.getScene(), renderer, ballManager)
 
     sceneManager.addObject('room', new Room(0, 0, 0))
@@ -36,8 +36,8 @@ function animate() {
 
     if(!window.paused) {
         let deltatime = clock.getDelta()
-        cameraManager.animate(deltatime)
         sceneManager.animate(deltatime)
+        cameraManager.animate(deltatime)
     }
 
     render()

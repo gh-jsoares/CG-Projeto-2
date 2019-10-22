@@ -1,7 +1,9 @@
 'use strict'
 
 import Ball from './Ball.js'
-import { genRandomIntInRange, getDistance } from './Utils.js'
+import Wall from './Wall.js'
+import Floor from './Floor.js'
+import { computePosition, genRandomIntInRange, getDistance } from './Utils.js'
 
 export default class BallManager {
 
@@ -15,6 +17,7 @@ export default class BallManager {
 
         this.registerEvents()
         this.showAxis = false
+        this.showWireframe = false
         this.setActiveBall(this.getLastBall())
     }
 
@@ -29,15 +32,20 @@ export default class BallManager {
     }
 
     animate(deltatime) {
-        for(let i = 0; i < this.balls.length; i++) {
+        for(let i = this.balls.length - 1; i > 0; i--) {
             const b1 = this.balls[i]
-            // for (let j = i + 1; j < this.balls.length; j++) {
-            //     const b2 = this.balls[j]
-            //     if(b1.obj.position.x < 21 && getDistance(b1.obj.position.x, b1.obj.position.y, b1.obj.position.z, b2.obj.position.x, b2.obj.position.y, b2.obj.position.z) - Ball.RADIUS * 2 < 0 ) {
-            //         b1.resolveCollision(b2)
-            //     }
-            // }
+            for (let j = i - 1; j >= 0; j--) {
+                const b2 = this.balls[j]
+                let tpos1 = computePosition(b1.obj.position, deltatime, new THREE.Vector2(b1.obj.userData.velocityX, b1.obj.userData.velocityZ))
+                let tpos2 = computePosition(b2.obj.position, deltatime, new THREE.Vector2(b2.obj.userData.velocityX, b2.obj.userData.velocityZ))
+                if(tpos1.x - Ball.RADIUS <= 26 && getDistance(tpos1.x, tpos1.y, tpos1.z, tpos2.x, tpos2.y, tpos2.z) - Math.pow(2 * Ball.RADIUS, 2) <= 0 ) {
+                    b1.resolveCollision(b2)
+                }
+            }
             b1.animate(deltatime)
+
+            if(b1.obj.position.y < -70)
+                this.removeBall(i)
         }
     }
 
@@ -48,13 +56,13 @@ export default class BallManager {
     generateCoordinates() {
         let position = new THREE.Vector3()
         position.x = genRandomIntInRange(-15, 15)
-        position.y = genRandomIntInRange(3, 3)
+        position.y = Floor.HEIGHT / 2 - Wall.HEIGHT / 2 + Ball.RADIUS
         position.z = genRandomIntInRange(-15, 15)
         return position
     }
 
     createBall(x, y, z, angle, speed) {
-        let ball = new Ball(x, y, z, angle, speed, this.showAxis)
+        let ball = new Ball(x, y, z, angle, speed, this.showAxis, this.showWireframe)
 
         this.balls.push(ball)
         this.obj.add(ball.obj)
@@ -70,7 +78,7 @@ export default class BallManager {
             let b = this.balls[i].obj
             let d = getDistance(position.x, position.y, position.z, b.position.x, b.position.y, b.position.z)
 
-            if(d <= 2 * Ball.RADIUS) {
+            if(d <= Math.pow(2 * Ball.RADIUS, 2)) {
                 position = this.generateCoordinates()
                 i = -1
             }
@@ -79,10 +87,14 @@ export default class BallManager {
         this.createBall(position.x, position.y, position.z, position.x, 0)
     }
 
-    removeBall(ball) {
-        let index = this.balls.findIndex((b) => b == ball)
+    removeBall(i) {
+        let ball = this.balls[i]
         ball.removeFromScene(this.scene)
-        this.balls.splice(index, 1)
+        if(this.activeBall == ball) {
+            ball.obj.remove(this.scene.getObjectByName('camera'))
+            this.activeBall = this.getLastBall()
+        }
+        this.balls.splice(i, 1)
     }
 
     registerEvents() {
@@ -95,6 +107,7 @@ export default class BallManager {
     }
 
     toggleWireframe() {
+        this.showWireframe = !this.showWireframe
         this.balls.forEach((b) => b.toggleWireframe())
     }
 }

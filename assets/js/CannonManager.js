@@ -58,7 +58,7 @@ export default class CannonManager {
 			}
 			
 			if(e.keyCode == 32) { // space
-				this.cannons[this.selectedCannon].fire(50)
+				this.cannons[this.selectedCannon].fire(40)
             }
         })
 

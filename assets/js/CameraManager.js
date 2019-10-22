@@ -13,7 +13,7 @@ const CAMERAS = [
         x: 0, y: 100, z: 0
     },
     {
-        x: 50, y: 50, z: 50
+        x: 50, y: 0, z: 0
     },
     {
         x: 0, y: 0, z: 0
@@ -111,10 +111,8 @@ export default class CameraManager {
     updatePerspectiveCamera(deltatime) {
         let ball = this.ballManager.activeBall
         ball.obj.add(this.activeCamera)
-        this.activeCamera.position.x = 15 * Math.sign(ball.obj.userData.velocityX)
-        this.activeCamera.position.y = 13
-        this.activeCamera.position.z = 0
 
+        this.activeCamera.position.set(-ball.obj.position.x, 12, -ball.obj.position.z)
         this.activeCamera.lookAt(ball.obj.position)
     }
 }

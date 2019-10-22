@@ -9,7 +9,7 @@ export default class Cannon {
         }
         this.materials = {
             body: new THREE.MeshBasicMaterial({
-                color: 0x4D4D4D,
+                color: 0x808080,
                 wireframe: false
             }),
 
@@ -22,7 +22,7 @@ export default class Cannon {
         this.addBase(this.obj)
         this.addWheels(this.obj)
 
-        this.obj.position.set(x, y, z)
+        this.obj.position.set(x, y - 2, z) // wheel height
 
         this.ballManager = ballManager
 
