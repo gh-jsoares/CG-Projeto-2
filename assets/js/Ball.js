@@ -3,7 +3,9 @@
 const GRAVITY = 1
 const FRICTION = 0.995
 
-class Ball {
+import { computePosition, rotateByAngle, swapVectorX } from './Utils.js'
+
+export default class Ball {
 
     static get RADIUS() {
         return 1.8

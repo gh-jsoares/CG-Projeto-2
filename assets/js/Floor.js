@@ -1,6 +1,6 @@
 'use strict'
 
-class Floor {
+export default class Floor {
 
     static get HEIGHT() {
         return 2

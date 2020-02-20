@@ -1,6 +1,6 @@
 'use strict'
 
-class Cannon {
+export default class Cannon {
 
     constructor(x, y, z, ballManager) {
         this.obj = new THREE.Object3D()
@@ -94,15 +94,6 @@ class Cannon {
     }
 
     rotateCannon(y) {
-        if(this.obj.position.z == 0 && Math.abs(this.obj.rotation.y + y) > Math.PI / 2 - Math.PI / 6)
-            return
-        
-            if(this.obj.position.z < 0 && (this.obj.rotation.y + y > Math.PI / 2 - Math.PI / 6 || this.obj.rotation.y + y < -Math.PI / 2 + Math.PI / 3))
-            return
-        
-        if(this.obj.position.z > 0 && (this.obj.rotation.y + y > Math.PI / 2 - Math.PI / 3   || this.obj.rotation.y + y < -Math.PI / 2 + Math.PI / 6))
-            return
-        
         this.obj.rotation.y += y
         if(this.ball)
             this.ball.rotate(y)

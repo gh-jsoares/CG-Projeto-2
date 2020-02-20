@@ -19,7 +19,8 @@ const CAMERAS = [
         x: 0, y: 0, z: 0
     }
 ]
-class CameraManager {
+
+export default class CameraManager {
     constructor(scene, renderer, ballManager) {
         this.orthographicCamera = new THREE.OrthographicCamera(-FRUSTUM_SIZE * ASPECT / 2, FRUSTUM_SIZE * ASPECT / 2, FRUSTUM_SIZE / 2, -FRUSTUM_SIZE / 2, ORTHO_NEAR, ORTHO_FAR)
         this.perspectiveCamera = new THREE.PerspectiveCamera(FOV, ASPECT, PERSC_NEAR, PERSC_FAR)
@@ -91,24 +92,15 @@ class CameraManager {
     isOrthoCamera() {
         return this.activeCamera == this.orthographicCamera
     }
-    
+
     resize(renderer) {
         let aspect = window.innerWidth / window.innerHeight
 
         if(this.isOrthoCamera()) {
-            if(aspect < 1) {
-                aspect = window.innerHeight / window.innerWidth
-                
-                this.activeCamera.left = FRUSTUM_SIZE / -2
-                this.activeCamera.right = FRUSTUM_SIZE / 2
-                this.activeCamera.top = FRUSTUM_SIZE * aspect / 2
-                this.activeCamera.bottom = -FRUSTUM_SIZE * aspect / 2
-            } else {
-                this.activeCamera.left = FRUSTUM_SIZE * aspect / -2
-                this.activeCamera.right = FRUSTUM_SIZE * aspect / 2
-                this.activeCamera.top = FRUSTUM_SIZE / 2
-                this.activeCamera.bottom = -FRUSTUM_SIZE / 2
-            }
+            this.activeCamera.left = FRUSTUM_SIZE * aspect / -2
+            this.activeCamera.right = FRUSTUM_SIZE * aspect / 2
+            this.activeCamera.top = FRUSTUM_SIZE / 2
+            this.activeCamera.bottom = -FRUSTUM_SIZE / 2
         } else
             this.activeCamera.aspect = aspect
 
